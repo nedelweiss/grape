@@ -11,6 +11,6 @@ public class LinkPreprocessService {
     private final LinkParseService linkParseService;
 
     public void preprocessUri(String link) {
-        linkParseService.selectLinks(2, Set.of(link));
+        linkParseService.parseLinks(2, Set.of(link));
     }
 }
