@@ -12,26 +12,33 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class LinkParseService {
-    private final IndexService indexService;
+public class PageParseService {
+    private Map<String, ParsePageDto> pages = new HashMap<>();
 
-    public void parseLinks(int deep, Set<String> links) {
+    public void parsePageByUrl(int deep, Set<String> links) {
         if (deep == 0) { return; }
 
         Set<Elements> elements = links.stream()
                 .map(element -> {
-                    Elements uries = null;
+                    Elements urls = null;
+
                     try {
                         if (!element.isEmpty()) {
                             Document document = Jsoup.connect(element).get();
-                            indexService.index(document.body().text());
 
-                            uries = document.body().select("a[href]");
+                            ParsePageDto parsePageDto = ParsePageDto.builder()
+                                    .title(document.title())
+                                    .body(document.body().text())
+                                    .build();
+
+                            pages.put(element, parsePageDto);
+
+                            urls = document.body().select("a[href]");
                         }
                     } catch (IOException e) {
                         e.getMessage();
                     }
-                    return uries;
+                    return urls;
                 })
                 .collect(Collectors.toSet());
 
@@ -41,6 +48,10 @@ public class LinkParseService {
                         .map(link -> link.attr("abs:href") + link.attr("rel")))
                 .collect(Collectors.toSet());
 
-        parseLinks(deep - 1, newLinks);
+        parsePageByUrl(deep - 1, newLinks);
+    }
+
+    public Map<String, ParsePageDto> getPages() {
+        return pages;
     }
 }

@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 public class IndexController {
-    final private LinkPreprocessService linkPreprocessService;
+    private final PageParseService pageParseService;
+    private final IndexService indexService;
 
     @GetMapping("/index")
     public String getIndex() {
@@ -22,8 +24,9 @@ public class IndexController {
     @PostMapping("/index")
     public String createIndex(@RequestParam
                               @NotBlank
-                              @Size(min = 5, max = 200, message = "Uri must contain from 5 to 200 symbols") String validUri) {
-        linkPreprocessService.preprocessUri(validUri);
+                              @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String validUrl) {
+        pageParseService.parsePageByUrl(2, Set.of(validUrl));
+        indexService.index(pageParseService.getPages());
 
         return "indexComplete";
     }
