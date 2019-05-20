@@ -8,9 +8,9 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class LinkPreprocessService {
-    private final ParseService parseService;
+    private final LinkParseService linkParseService;
 
-    public void create(String link) {
-        parseService.selectLinks(3, Set.of(link));
+    public void preprocessUri(String link) {
+        linkParseService.selectLinks(2, Set.of(link));
     }
 }

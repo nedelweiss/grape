@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ParseService {
+public class LinkParseService {
     private final IndexService indexService;
 
     public void selectLinks(int deep, Set<String> links) {
@@ -23,9 +23,9 @@ public class ParseService {
                     Elements uries = null;
                     try {
                         Document document = Jsoup.connect(element).get();
-                        uries = document.body().select("a[href]");
-
                         indexService.index(document.body().text());
+
+                        uries = document.body().select("a[href]");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -33,6 +33,11 @@ public class ParseService {
                 })
                 .collect(Collectors.toSet());
 
-        selectLinks(deep - 1, links);
+        Set<String> newLinks = elements.stream()
+                .flatMap(element -> element.stream()
+                        .map(link -> link.attr("abs:href") + link.attr("rel")))
+                .collect(Collectors.toSet());
+
+        selectLinks(deep - 1, newLinks);
     }
 }
