@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PageParseService {
     private Map<String, ParsePageDto> pages = new HashMap<>();
+    private Set<String> newLinks = new HashSet<>();
 
     public void parsePageByUrl(int deep, Set<String> links) {
         if (deep == 0) { return; }
@@ -29,6 +30,7 @@ public class PageParseService {
                             ParsePageDto parsePageDto = ParsePageDto.builder()
                                     .title(document.title())
                                     .body(document.body().text())
+                                    .index(false)
                                     .build();
 
                             pages.put(element, parsePageDto);
@@ -42,7 +44,7 @@ public class PageParseService {
                 })
                 .collect(Collectors.toSet());
 
-        Set<String> newLinks = elements.stream()
+        newLinks = elements.stream()
                 .filter(Objects::nonNull)
                 .flatMap(element -> element.stream()
                         .map(link -> link.attr("abs:href") + link.attr("rel")))
