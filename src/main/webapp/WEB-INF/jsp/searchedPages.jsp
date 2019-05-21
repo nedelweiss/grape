@@ -3,16 +3,21 @@
 <head>
     <title>Pages</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="css/searchedPages.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div>
-    <table>
+<div class="outer">
+    <div class="inner">
         <jsp:useBean id="searchedPages" scope="request" type="java.util.List"/>
         <c:forEach items="${searchedPages}" var="item">
-            <p><b>${item.title}</b><br>
-            ${item.url}</p>
+            <a href="${item.url}" >
+                <p>
+                    <b>${item.title}</b><br>
+                    <span>${item.url}</span>
+                </p>
+            </a>
         </c:forEach>
-    </table>
+    </div>
 </div>
 </body>
 </html>
