@@ -24,9 +24,10 @@ import java.util.stream.Collectors;
 public class SearchIndexService {
     public List<PageDto> searchIndex(String inField, String q) {
         List<Document> documents = new ArrayList<>();
+        String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/lucene-data");
 
         try {
-            Directory memoryIndex = FSDirectory.open(Paths.get("/home/mell/data"));
+            Directory memoryIndex = FSDirectory.open(Paths.get(luceneDirectoryPath));
             StandardAnalyzer analyzer = new StandardAnalyzer();
             IndexReader indexReader = DirectoryReader.open(memoryIndex);
             IndexSearcher searcher = new IndexSearcher(indexReader);
