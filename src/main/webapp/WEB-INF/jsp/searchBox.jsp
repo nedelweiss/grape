@@ -7,7 +7,7 @@
 <body>
 <div class="parent">
     <div class="child">
-        <form class="stl-form" action="/" method="post">
+        <form class="stl-form" action="/search" method="post">
             <input type="text" name="q" placeholder="Search...">
             <input type="submit" name="submit" value="Search">
         </form>

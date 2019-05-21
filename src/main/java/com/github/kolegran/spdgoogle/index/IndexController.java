@@ -25,8 +25,8 @@ public class IndexController {
     public String createIndex(@RequestParam
                               @NotBlank
                               @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String validUrl) {
-        pageParseService.parsePageByUrl(2, Set.of(validUrl));
-        indexService.index(pageParseService.getPages());
+        pageParseService.parsePageByUrl(3, Set.of(validUrl));
+        indexService.indexDocument(pageParseService.getPages());
 
         return "indexComplete";
     }
