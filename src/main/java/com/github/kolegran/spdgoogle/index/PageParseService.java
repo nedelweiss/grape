@@ -16,8 +16,8 @@ public class PageParseService {
     private Map<String, ParsePageDto> pages = new HashMap<>();
     private Set<String> newLinks = new HashSet<>();
 
-    public void parsePageByUrl(int deep, Set<String> links) {
-        if (deep == 0) { return; }
+    public void parsePageByUrl(int depth, Set<String> links) {
+        if (depth == 0) { return; }
 
         Set<Elements> elements = links.stream()
                 .map(element -> {
@@ -50,7 +50,7 @@ public class PageParseService {
                         .map(link -> link.attr("abs:href") + link.attr("rel")))
                 .collect(Collectors.toSet());
 
-        parsePageByUrl(deep - 1, newLinks);
+        parsePageByUrl(depth - 1, newLinks);
     }
 
     public Map<String, ParsePageDto> getPages() {
