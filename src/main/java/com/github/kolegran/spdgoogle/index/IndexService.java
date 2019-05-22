@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class IndexService {
     public void indexDocument(Map<String, ParsePageDto> pages) {
-        String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/lucene-data");
+        String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/dev/lucene-data");
 
         try {
             Directory memoryIndex = FSDirectory.open(Paths.get(luceneDirectoryPath));

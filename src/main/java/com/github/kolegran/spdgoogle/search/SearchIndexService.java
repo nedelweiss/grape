@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class SearchIndexService {
     public List<PageDto> searchIndex(String inField, String q) {
         List<Document> documents = new ArrayList<>();
-        String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/lucene-data");
+        String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/dev/lucene-data");
 
         try {
             Directory memoryIndex = FSDirectory.open(Paths.get(luceneDirectoryPath));
