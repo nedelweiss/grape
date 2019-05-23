@@ -1,5 +1,6 @@
 package com.github.kolegran.spdgoogle.index;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -7,20 +8,18 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class IndexService {
-    public void indexDocument(Map<String, ParsePageDto> pages) {
-        String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/dev/lucene-data");
+    private final Directory memoryIndex;
 
+    public void indexDocument(Map<String, ParsePageDto> pages) {
         try {
-            Directory memoryIndex = FSDirectory.open(Paths.get(luceneDirectoryPath));
             StandardAnalyzer analyzer = new StandardAnalyzer();
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
             IndexWriter writer = new IndexWriter(memoryIndex, indexWriterConfig);
@@ -37,7 +36,7 @@ public class IndexService {
 
             writer.close();
         } catch (IOException e) {
-            e.getMessage();
+            throw new IllegalArgumentException(e);
         }
     }
 }

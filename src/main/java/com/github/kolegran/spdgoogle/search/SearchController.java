@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotBlank;
@@ -24,7 +23,7 @@ public class SearchController {
         return "searchBox";
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public String search(@RequestParam
                          @NotBlank
                          @NotNull

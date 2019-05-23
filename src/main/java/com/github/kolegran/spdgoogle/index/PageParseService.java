@@ -38,7 +38,7 @@ public class PageParseService {
                             urls = document.body().select("a[href]");
                         }
                     } catch (IOException e) {
-                        e.getMessage();
+                        throw new IllegalStateException(e);
                     }
                     return urls;
                 })
