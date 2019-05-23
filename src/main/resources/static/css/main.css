@@ -1,68 +1,56 @@
 .parent {
-    height: 100%;
-    width: 100%;
-    background: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.05)), to(rgba(0,0,0,0)));
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 100%);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 100%);
-    padding: 20px 50px;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
+    width: 560px;
+    padding: 8% 0 0;
+    margin: auto;
 }
 
 .child {
-    height: 30%;
-    width: 30%;
     position: relative;
-    background: gainsboro;
-    padding: 20px 50px;
-    display: -webkit-box;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
+    z-index: 1;
+    background: #FFFFFF;
+    max-width: 560px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
-.stl-form input[type="submit"] {
-    background: #2980B9;
-    border: 1px solid #2980B9;
-    color: #fff;
-    padding: 0 30px;
-    cursor: pointer;
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    transition: all 0.2s;
-}
-
-.stl-form  {
-    display: -webkit-box;
-    display: flex;
-    z-index: 10;
-    position: relative;
-    box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.stl-form  > * {
-    border: 0;
-    padding: 0 0 0 10px;
-    background: #fff;
-    line-height: 50px;
-    font-size: 1rem;
-    border-radius: 0;
+.child input {
+    font-family: sans-serif;
     outline: 0;
-    -webkit-appearance: none;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
 }
 
-input[type="search"] {
-    flex-basis: 500px;
+.child .button {
+    font-family: sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.child .button:hover,.child .button:active,.child .button:focus {
+    background: #43A047;
+}
+
+body {
+    background: #f2f2f2;
+    background: -webkit-linear-gradient(right, #f2f2f2, #f2f2f2);
+    background: -moz-linear-gradient(right, #f2f2f2, #f2f2f2);
+    background: -o-linear-gradient(right, #f2f2f2, #f2f2f2);
+    background: linear-gradient(to left, #f2f2f2, #f2f2f2);
+    font-family: sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }

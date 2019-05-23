@@ -7,11 +7,11 @@
 <body>
     <div class="parent">
         <div class="child">
-        <form class="stl-form" action="/index" method="post">
-            <input type="text" name="validUrl" placeholder="Input valid url">
-            <input type="number " name="indexDepth">
-            <input type="submit" name="submit" value="Index">
-        </form>
+            <form action="/index" method="post">
+                <input type="text" name="validUrl" placeholder="Input valid url">
+                <input type="number " name="indexDepth">
+                <input class="button" type="submit" name="submit" value="Index">
+            </form>
         </div>
     </div>
 </body>
