@@ -16,8 +16,8 @@ public class PageParseService {
     private Map<String, ParsePageDto> pages = new HashMap<>();
     private Set<String> newLinks = new HashSet<>();
 
-    public void parsePageByUrl(int depth, Set<String> links) {
-        if (depth == 0) { return; }
+    public Map<String, ParsePageDto> parsePageByUrl(int depth, Set<String> links) {
+        if (depth == 0) { return pages; }
 
         Set<Elements> elements = links.stream()
                 .map(element -> {
@@ -38,7 +38,7 @@ public class PageParseService {
                             urls = document.body().select("a[href]");
                         }
                     } catch (IOException e) {
-                        throw new IllegalStateException(e);
+                        e.getStackTrace();
                     }
                     return urls;
                 })
@@ -47,13 +47,11 @@ public class PageParseService {
         newLinks = elements.stream()
                 .filter(Objects::nonNull)
                 .flatMap(element -> element.stream()
-                        .map(link -> link.attr("abs:href") + link.attr("rel")))
+                        .map(link -> link.attr("abs:href") + link.attr("rel"))
+                        .map(link ->
+                            link.contains("#") ? link.substring(0, link.indexOf("#")) : link))
                 .collect(Collectors.toSet());
 
-        parsePageByUrl(depth - 1, newLinks);
-    }
-
-    public Map<String, ParsePageDto> getPages() {
-        return pages;
+        return parsePageByUrl(depth - 1, newLinks);
     }
 }

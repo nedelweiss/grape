@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.*;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -29,8 +30,8 @@ public class IndexController {
                               @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String validUrl,
                               @RequestParam(defaultValue = "3") @Min(1) @Max(20) int indexDepth) {
 
-        pageParseService.parsePageByUrl(indexDepth, Set.of(validUrl));
-        indexService.indexDocument(pageParseService.getPages());
+        Map<String, ParsePageDto> pages = pageParseService.parsePageByUrl(indexDepth, Set.of(validUrl));
+        indexService.indexDocument(pages);
 
         return "indexComplete";
     }
