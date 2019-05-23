@@ -2,9 +2,9 @@
 
 ##### Links index page
 ```
-kolegran.com:8080/index
+kolegran.com/index
 ```
 ##### Words search page
 ```
-kolegran.com:8080/
+kolegran.com
 ```
