@@ -26,7 +26,6 @@ public class PageParser {
                             ParsePageDto parsePageDto = ParsePageDto.builder()
                                     .title(document.title())
                                     .body(document.body().text())
-                                    .index(false)
                                     .build();
 
                             pages.put(element, parsePageDto);

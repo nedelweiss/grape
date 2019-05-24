@@ -8,5 +8,4 @@ import lombok.Getter;
 public class ParsePageDto {
     private String title;
     private String body;
-    private boolean index;
 }
