@@ -25,8 +25,6 @@ public class SearchIndexService {
     private final Directory memoryIndex;
 
     public List<PageDto> searchIndex(String inField, String q) {
-        List<Document> documents = new ArrayList<>();
-
         try {
             StandardAnalyzer analyzer = new StandardAnalyzer();
             IndexReader indexReader = DirectoryReader.open(memoryIndex);
@@ -35,6 +33,8 @@ public class SearchIndexService {
             Query query = new QueryParser(inField, analyzer).parse(q);
 
             TopDocs topDocs = searcher.search(query, 10);
+
+            List<Document> documents = new ArrayList<>();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 documents.add(searcher.doc(scoreDoc.doc));
             }
@@ -50,6 +50,5 @@ public class SearchIndexService {
         } catch (IOException | ParseException e) {
             throw new IllegalStateException(e);
         }
-
     }
 }

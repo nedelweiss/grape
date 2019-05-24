@@ -1,20 +1,19 @@
 package com.github.kolegran.spdgoogle.index;
 
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class PageParseService {
+public class PageParser {
     private Map<String, ParsePageDto> pages = new HashMap<>();
-    private Set<String> newLinks = new HashSet<>();
+    private final HttpConnectionService httpConnectionService;
 
     public Map<String, ParsePageDto> parsePageByUrl(int depth, Set<String> links) {
         if (depth == 0) { return pages; }
@@ -22,11 +21,8 @@ public class PageParseService {
         Set<Elements> elements = links.stream()
                 .map(element -> {
                     Elements urls = null;
-
                     try {
-                        if (!element.isEmpty()) {
-                            Document document = Jsoup.connect(element).get();
-
+                            Document document = httpConnectionService.getConnection(element);
                             ParsePageDto parsePageDto = ParsePageDto.builder()
                                     .title(document.title())
                                     .body(document.body().text())
@@ -36,7 +32,6 @@ public class PageParseService {
                             pages.put(element, parsePageDto);
 
                             urls = document.body().select("a[href]");
-                        }
                     } catch (IOException e) {
                         e.getStackTrace();
                     }
@@ -44,12 +39,12 @@ public class PageParseService {
                 })
                 .collect(Collectors.toSet());
 
-        newLinks = elements.stream()
+        Set<String> newLinks = elements.stream()
                 .filter(Objects::nonNull)
                 .flatMap(element -> element.stream()
                         .map(link -> link.attr("abs:href") + link.attr("rel"))
-                        .map(link ->
-                            link.contains("#") ? link.substring(0, link.indexOf("#")) : link))
+                        .map(link -> link.contains("#") ? link.substring(0, link.indexOf("#")) : link)
+                        .filter(str -> !str.isEmpty()))
                 .collect(Collectors.toSet());
 
         return parsePageByUrl(depth - 1, newLinks);

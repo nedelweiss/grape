@@ -33,10 +33,9 @@ public class IndexService {
 
                 writer.addDocument(document);
             }
-
             writer.close();
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalStateException(e);
         }
     }
 }
