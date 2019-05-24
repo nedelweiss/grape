@@ -2,12 +2,12 @@ package com.github.kolegran.spdgoogle.index;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.DocValuesType;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.util.BytesRef;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,8 +28,9 @@ public class IndexService {
                 Document document = new Document();
 
                 document.add(new TextField("url", entry.getKey(), Field.Store.YES));
-                document.add(new TextField("title", entry.getValue().getTitle(), Field.Store.YES));
                 document.add(new TextField("body", entry.getValue().getBody(), Field.Store.YES));
+                document.add(new TextField("title", entry.getValue().getTitle(), Field.Store.YES));
+                document.add(new SortedDocValuesField("sortByTitle", new BytesRef(entry.getValue().getTitle())));
 
                 writer.addDocument(document);
             }

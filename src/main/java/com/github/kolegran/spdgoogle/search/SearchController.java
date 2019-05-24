@@ -27,9 +27,10 @@ public class SearchController {
     public String search(@RequestParam
                          @NotBlank
                          @NotNull
-                         @Size(min = 5, max = 200) String q, Map<String, Object> model) {
+                         @Size(min = 1, max = 200) String q,
+                         /*@RequestParam String sortType,*/ Map<String, Object> model) {
 
-        List<PageDto> searchedPages = searchIndexService.searchIndex("body", q);
+        List<PageDto> searchedPages = searchIndexService.searchIndex("body", q, "");
         model.put("searchedPages", searchedPages);
 
         return "searchedPages";

@@ -20,12 +20,10 @@
             <c:otherwise>
                 <jsp:useBean id="searchedPages" scope="request" type="java.util.List"/>
                 <c:forEach items="${searchedPages}" var="item">
-                    <a href="${item.url}" >
-                        <p>
-                            <b>${item.title}</b><br>
-                            <span>${item.url}</span>
-                        </p>
-                    </a>
+                    <p>
+                        <a href="${item.url}"><b>${item.title}</b></a><br>
+                        <a href="${item.url}"><span>${item.url}</span></a>
+                     </p>
                 </c:forEach>
             </c:otherwise>
         </c:choose>
