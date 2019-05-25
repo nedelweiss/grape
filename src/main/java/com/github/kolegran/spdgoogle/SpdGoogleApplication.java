@@ -2,6 +2,7 @@ package com.github.kolegran.spdgoogle;
 
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,7 @@ public class SpdGoogleApplication {
 	}
 
 	@Bean
-	public Directory createDirectory() throws IOException {
-		String luceneDirectoryPath = System.getenv().getOrDefault("LUCENE_DIR", "/dev/lucene-data");
+	public Directory luceneDirectory(@Value("${app.lucene-dir}") String luceneDirectoryPath) throws IOException {
 		return FSDirectory.open(Paths.get(luceneDirectoryPath));
 	}
 }
