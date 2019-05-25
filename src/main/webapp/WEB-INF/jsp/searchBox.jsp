@@ -7,9 +7,9 @@
 <body>
 <div class="parent">
     <div class="child">
-        <form action="/search" method="get">
+        <form action="search" method="get">
             <input type="text" name="q" placeholder="Search...">
-            <input class="button" type="submit" name="submit" value="Search">
+            <button class="button">Search</button>
         </form>
     </div>
 </div>

@@ -7,10 +7,10 @@
 <body>
     <div class="parent">
         <div class="child">
-            <form action="/index" method="post">
-                <input type="text" name="validUrl" placeholder="Input valid url">
-                <input type="number " name="indexDepth">
-                <input class="button" type="submit" name="submit" value="Index">
+            <form action="" method="post">
+                <input type="text" name="validUrl" placeholder="Input an URL">
+                <input type="number" name="indexDepth" value="3">
+                <button class="button">Index</button>
             </form>
         </div>
     </div>

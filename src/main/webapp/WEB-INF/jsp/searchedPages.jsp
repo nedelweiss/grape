@@ -6,22 +6,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="css/searchedPages.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="js/autosubmit.js"></script>
 </head>
 <body>
 <div class="right-block">
-    <form name='sortForm' id='sortForm' action="/search" method = "get">
-        <input type="hidden" id="q" name="q" value = "<%=request.getParameter("q")%>"/>
-        <input type="radio" name="sortType" value="relevant" onchange="autoSubmit()">Sort by relevant<br>
-        <input type="radio" name="sortType" value="alphabet" onchange="autoSubmit()">Sort by alphabet<br>
-    </form>
+    <%
+        if("alphabet".equals(request.getParameter("sortType"))) {
+    %>
+    <a href="?q=<%=request.getParameter("q")%>&sortType=relevant">Sort by relevant</a> | Sort by alphabet
+    <%
+        } else {
+    %>
+    Sort by relevant | <a href="?q=<%=request.getParameter("q")%>&sortType=alphabet">Sort by alphabet</a>
+    <%
+        }
+    %>
+
 </div>
 <div class="left-block">
 </div>
 <div class="outer">
     <div class="inner">
         <c:choose>
-            <c:when test="${searchedPages.size() == 0}">
+            <c:when test="${searchedPages.isEmpty()}">
                 <div class="parent">
                     <div class="child">
                         <h2>No matches</h2>
@@ -39,6 +45,8 @@
             </c:otherwise>
         </c:choose>
     </div>
+</div>
+<div>
 </div>
 </body>
 </html>
