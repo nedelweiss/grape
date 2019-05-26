@@ -12,41 +12,61 @@
     <%
         if("alphabet".equals(request.getParameter("sortType"))) {
     %>
-    <a href="?q=<%=request.getParameter("q")%>&sortType=relevant">Sort by relevant</a> | Sort by alphabet
+    <a href="?q=<%=request.getParameter("q")%>&sortType=relevant&pageNum=1">Sort by relevant</a> | Sort by alphabet
     <%
-        } else {
+    } else {
     %>
-    Sort by relevant | <a href="?q=<%=request.getParameter("q")%>&sortType=alphabet">Sort by alphabet</a>
+    Sort by relevant | <a href="?q=<%=request.getParameter("q")%>&sortType=alphabet&pageNum=1">Sort by alphabet</a>
     <%
         }
     %>
-
 </div>
 <div class="left-block">
 </div>
-<div class="outer">
-    <div class="inner">
+<div class="outer-search">
+    <div class="inner-search">
         <c:choose>
-            <c:when test="${searchedPages.isEmpty()}">
-                <div class="parent">
-                    <div class="child">
+            <c:when test="${page.pageItems.isEmpty()}">
+                <div class="outer">
+                    <div class="inner">
                         <h2>No matches</h2>
                     </div>
                 </div>
             </c:when>
             <c:otherwise>
-                <jsp:useBean id="searchedPages" scope="request" type="java.util.List"/>
-                <c:forEach items="${searchedPages}" var="item">
+                <c:forEach items="${page.pageItems}" var="item">
                     <p>
                         <a href="${item.url}"><b>${item.title}</b></a><br>
                         <a href="${item.url}"><span>${item.url}</span></a>
-                     </p>
+                    </p>
                 </c:forEach>
             </c:otherwise>
         </c:choose>
     </div>
 </div>
-<div>
+</br></br></br></br>
+<c:set var="lastPage" value="${page.numberOfDocs}" />
+<c:set var="firstPage" value="1" />
+
+<div class="pagination">
+    <c:if test="${currentPage != 1}">
+        <a href="?q=${param.q}&sortType=${param.sortType}&pageNum=${currentPage - 1}">&laquo;</a>
+    </c:if>
+
+    <c:forEach begin="${firstPage}" end="${lastPage}" step="1" varStatus="status">
+        <c:choose>
+            <c:when test="${param.pageNum eq status.index}">
+                <a class="active" href="?q=${param.q}&sortType=${param.sortType}&pageNum=${status.index}">${status.index}</a>
+            </c:when>
+            <c:otherwise>
+                <a href="?q=${param.q}&sortType=${param.sortType}&pageNum=${status.index}">${status.index}</a>
+            </c:otherwise>
+        </c:choose>
+    </c:forEach>
+
+    <c:if test="${currentPage lt lastPage}">
+        <a href="?q=${param.q}&sortType=${param.sortType}&pageNum=${currentPage + 1}">&raquo;</a>
+    </c:if>
 </div>
 </body>
 </html>

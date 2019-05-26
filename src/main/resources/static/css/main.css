@@ -1,10 +1,10 @@
-.parent {
+.outer {
     width: 560px;
     padding: 8% 0 0;
     margin: auto;
 }
 
-.child {
+.inner {
     position: relative;
     z-index: 1;
     background: #FFFFFF;
@@ -15,7 +15,7 @@
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
-.child input {
+.inner input {
     font-family: sans-serif;
     outline: 0;
     background: #f2f2f2;
@@ -27,7 +27,7 @@
     font-size: 14px;
 }
 
-.child .button {
+.inner .button {
     font-family: sans-serif;
     text-transform: uppercase;
     outline: 0;
@@ -40,7 +40,7 @@
     cursor: pointer;
 }
 
-.child .button:hover,.child .button:active,.child .button:focus {
+.inner .button:hover,.inner .button:active,.inner .button:focus {
     background: #43A047;
 }
 

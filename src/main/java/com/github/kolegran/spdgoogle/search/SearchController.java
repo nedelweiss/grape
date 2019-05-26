@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,7 +19,7 @@ public class SearchController {
 
     @GetMapping("/")
     public String getSearchBox() {
-        return "searchBox";
+        return "search";
     }
 
     @GetMapping("/search")
@@ -28,10 +27,12 @@ public class SearchController {
                          @NotBlank
                          @NotNull
                          @Size(min = 1, max = 200) String q,
-                         @RequestParam(defaultValue = "relevant") String sortType, Map<String, Object> model) {
+                         @RequestParam(defaultValue = "relevant") String sortType,
+                         @RequestParam(defaultValue = "1") int pageNum, Map<String, Object> model) {
 
-        List<PageDto> searchedPages = searchIndexService.searchIndex("body", q, sortType);
-        model.put("searchedPages", searchedPages);
+        PageDto page = searchIndexService.searchIndex("body", q, sortType, pageNum);
+        model.put("page", page);
+        model.put("currentPage", pageNum);
 
         return "searchedPages";
     }

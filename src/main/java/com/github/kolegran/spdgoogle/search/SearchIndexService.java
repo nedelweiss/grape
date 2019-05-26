@@ -21,27 +21,26 @@ import java.util.stream.Collectors;
 public class SearchIndexService {
     private final Directory memoryIndex;
 
-    public List<PageDto> searchIndex(String inField, String q, String sortType) {
+    public PageDto searchIndex(String inField, String q, String sortType, int pageNum) {
         try {
             StandardAnalyzer analyzer = new StandardAnalyzer();
             IndexReader indexReader = DirectoryReader.open(memoryIndex);
             IndexSearcher searcher = new IndexSearcher(indexReader);
 
             Query query = new QueryParser(inField, analyzer).parse(q);
-            TopDocs topDocs = searcher.search(query, 50, createSort(sortType));
+            TopDocs topDocs = searcher.search(query, pageNum*10, createSort(sortType));
 
             List<Document> documents = new ArrayList<>();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 documents.add(searcher.doc(scoreDoc.doc));
             }
 
-            return documents.stream()
-                    .map(document -> PageDto.builder()
-                            .url(document.get("url"))
-                            .title(document.get("title"))
-                            .body(document.get("body"))
-                            .build())
-                    .collect(Collectors.toList());
+            List<PageItemDto> pageItems = createPageItem(documents);
+
+            return PageDto.builder()
+                    .numberOfDocs(indexReader.numDocs())
+                    .pageItems(pageItems.subList(Math.max(pageItems.size() - 10, 0), pageItems.size()))
+                    .build();
 
         } catch (IOException | ParseException e) {
             throw new IllegalStateException(e);
@@ -50,5 +49,15 @@ public class SearchIndexService {
 
     private Sort createSort(String sortType) {
         return sortType.equals("alphabet") ? new Sort(new SortField("sortByTitle", SortField.Type.STRING_VAL, false)) : new Sort();
+    }
+
+    private List<PageItemDto> createPageItem(List<Document> documents) {
+        return documents.stream()
+                .map(document -> PageItemDto.builder()
+                        .url(document.get("url"))
+                        .title(document.get("title"))
+                        .body(document.get("body"))
+                        .build())
+                .collect(Collectors.toList());
     }
 }
