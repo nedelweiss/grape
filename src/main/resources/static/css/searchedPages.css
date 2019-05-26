@@ -10,9 +10,14 @@ a {
     color: #4169e1;
 }
 
-span {
+.url {
     font-size: 14px;
     color: #4682B4;
+}
+
+.highlight {
+    font-size: 14px;
+    color: darkgray;
 }
 
 .outer-search {

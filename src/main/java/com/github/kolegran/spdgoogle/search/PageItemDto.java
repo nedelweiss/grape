@@ -9,4 +9,5 @@ public class PageItemDto {
     private String url;
     private String title;
     private String body;
+    private String fragments;
 }

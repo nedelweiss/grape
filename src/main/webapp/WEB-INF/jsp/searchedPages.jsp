@@ -38,7 +38,8 @@
                 <c:forEach items="${page.pageItems}" var="item">
                     <p>
                         <a href="${item.url}"><b>${item.title}</b></a><br>
-                        <a href="${item.url}"><span>${item.url}</span></a>
+                        <a href="${item.url}"><span class="url">${item.url}</span></a><br>
+                        <a href="${item.url}"><span class="highlight">${item.fragments}</span></a>
                     </p>
                 </c:forEach>
             </c:otherwise>
