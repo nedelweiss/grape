@@ -36,9 +36,8 @@ public class SearchIndexService {
             }
 
             List<PageItemDto> pageItems = createPageItem(documents);
-
             return PageDto.builder()
-                    .numberOfDocs(indexReader.numDocs())
+                    .numberOfDocs(topDocs.scoreDocs.length)
                     .pageItems(pageItems.subList(Math.max(pageItems.size() - 10, 0), pageItems.size()))
                     .build();
 
