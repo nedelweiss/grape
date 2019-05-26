@@ -5,8 +5,8 @@
     <link href="css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="parent">
-    <div class="child">
+<div class="outer">
+    <div class="inner">
         <h2>Index complete</h2>
     </div>
 </div>

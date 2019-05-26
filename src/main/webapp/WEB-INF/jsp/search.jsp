@@ -5,8 +5,8 @@
     <link href="css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="parent">
-    <div class="child">
+<div class="outer">
+    <div class="inner">
         <form action="search" method="get">
             <input type="text" name="q" placeholder="Search...">
             <button class="button">Search</button>

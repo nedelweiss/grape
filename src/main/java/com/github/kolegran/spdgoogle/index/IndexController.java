@@ -28,11 +28,11 @@ public class IndexController {
                               @NotBlank
                               @NotNull
                               @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String validUrl,
-                              @RequestParam(defaultValue = "3") @Min(1) @Max(20) int indexDepth) {
+                              @RequestParam(defaultValue = "2") @Min(1) @Max(20) int indexDepth) {
 
         Map<String, ParsePageDto> pages = pageParser.parsePageByUrl(indexDepth, Set.of(validUrl));
         indexService.indexDocument(pages);
 
-        return "indexComplete";
+        return "indexed";
     }
 }
