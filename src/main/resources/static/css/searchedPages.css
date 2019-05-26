@@ -42,7 +42,8 @@ span {
 }
 
 .pagination {
-    display: inline-block;
+    display: table;
+    margin: 0 auto;
 }
 
 .pagination a {

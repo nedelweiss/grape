@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Pages</title>
@@ -47,13 +48,35 @@
 </br></br></br></br>
 <c:set var="lastPage" value="${page.numberOfDocs}" />
 <c:set var="firstPage" value="1" />
+<c:set var="startPage" value="1" />
+<c:set var="endPage" value="5" />
+<c:set var="step" value="5" />
+
+<fmt:parseNumber var="endPage" value="${(currentPage - 1)/step + 1}" />
+<c:set var="endPage" value="${endPage*step}" />
+<c:set var="startPage" value="${endPage - step + 1}" />
+
+<c:if test="${endPage gt lastPage}">
+    <c:set var="endPage" value="${lastPage}" />
+</c:if>
+<c:if test="${startPage lt firstPage}">
+    <c:set var="startPage" value="${firstPage}" />
+    <c:set var="endPage" value="${step}" />
+</c:if>
 
 <div class="pagination">
+    <c:if test="${currentPage lt startPage}">
+        <c:if test="${startPage - 5 ge 1}">
+            <c:set var="startPage" value="${startPage - 5}" />
+        </c:if>
+        <c:set var="endPage" value="${endPage - 5}" />
+    </c:if>
+
     <c:if test="${currentPage != 1}">
         <a href="?q=${param.q}&sortType=${param.sortType}&pageNum=${currentPage - 1}">&laquo;</a>
     </c:if>
 
-    <c:forEach begin="${firstPage}" end="${lastPage}" step="1" varStatus="status">
+    <c:forEach begin="${startPage}" end="${endPage}" step="1" varStatus="status">
         <c:choose>
             <c:when test="${param.pageNum eq status.index}">
                 <a class="active" href="?q=${param.q}&sortType=${param.sortType}&pageNum=${status.index}">${status.index}</a>
