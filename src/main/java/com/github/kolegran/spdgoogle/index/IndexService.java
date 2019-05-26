@@ -36,6 +36,7 @@ public class IndexService {
 
                 writer.addDocument(document);
             }
+            pages.clear();
             writer.close();
         } catch (IOException e) {
             throw new IllegalStateException(e);

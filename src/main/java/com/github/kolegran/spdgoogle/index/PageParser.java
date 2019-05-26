@@ -22,15 +22,16 @@ public class PageParser {
                 .map(element -> {
                     Elements urls = null;
                     try {
-                            Document document = httpConnectionService.getConnection(element);
-                            ParsePageDto parsePageDto = ParsePageDto.builder()
-                                    .title(document.title())
-                                    .body(document.body().text())
-                                    .build();
+                        Document document = httpConnectionService.getConnection(element);
 
-                            pages.put(element, parsePageDto);
+                        ParsePageDto parsePageDto = ParsePageDto.builder()
+                                .title(document.title())
+                                .body(document.body().text())
+                                .build();
 
-                            urls = document.body().select("a[href]");
+                        pages.put(element, parsePageDto);
+
+                        urls = document.body().select("a[href]");
                     } catch (IOException e) {
                         e.getStackTrace();
                     }
