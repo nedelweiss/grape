@@ -37,7 +37,7 @@ public class SearchIndexService {
 
             List<PageItemDto> pageItems = createPageItem(documents);
             return PageDto.builder()
-                    .numberOfDocs(topDocs.scoreDocs.length)
+                    .numberOfDocs(getAllHitsNumber(query, searcher))
                     .pageItems(pageItems.subList(Math.max(pageItems.size() - 10, 0), pageItems.size()))
                     .build();
 
@@ -58,5 +58,11 @@ public class SearchIndexService {
                         .body(document.get("body"))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private int getAllHitsNumber(Query query, IndexSearcher searcher) throws IOException {
+        TotalHitCountCollector collector = new TotalHitCountCollector();
+        searcher.search(query, collector);
+        return collector.getTotalHits();
     }
 }
