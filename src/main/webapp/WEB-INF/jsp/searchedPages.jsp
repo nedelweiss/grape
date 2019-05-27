@@ -9,19 +9,21 @@
     <link href="css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="right-block">
-    <%
-        if("alphabet".equals(request.getParameter("sortType"))) {
-    %>
-    <a href="?q=<%=request.getParameter("q")%>&sortType=relevant&pageNum=1">Sort by relevant</a> | Sort by alphabet
-    <%
-    } else {
-    %>
-    Sort by relevant | <a href="?q=<%=request.getParameter("q")%>&sortType=alphabet&pageNum=1">Sort by alphabet</a>
-    <%
-        }
-    %>
-</div>
+<c:if test="${!page.pageItems.isEmpty()}">
+    <div class="right-block">
+        <%
+            if("alphabet".equals(request.getParameter("sortType"))) {
+        %>
+        <a href="?q=<%=request.getParameter("q")%>&sortType=relevant&pageNum=1">Sort by relevant</a> | Sort by alphabet
+        <%
+        } else {
+        %>
+        Sort by relevant | <a href="?q=<%=request.getParameter("q")%>&sortType=alphabet&pageNum=1">Sort by alphabet</a>
+        <%
+            }
+        %>
+    </div>
+</c:if>
 <div class="left-block">
 </div>
 <div class="outer-search">

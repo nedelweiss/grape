@@ -9,10 +9,13 @@ a {
     text-decoration: none;
     color: #4169e1;
 }
+.highlight b {
+    background-color: #FFFF00;
+}
 
 .url {
     font-size: 14px;
-    color: #4682B4;
+    color: #43A047;
 }
 
 .highlight {
@@ -21,7 +24,9 @@ a {
 }
 
 .outer-search {
-    text-align: center;
+    text-align: justify;
+    margin: 0 auto;
+    display: table;
 }
 .inner-search {
     width: 100%;
@@ -66,4 +71,3 @@ a {
 .pagination a:hover:not(.active) {
     background-color: #ddd;
 }
-
