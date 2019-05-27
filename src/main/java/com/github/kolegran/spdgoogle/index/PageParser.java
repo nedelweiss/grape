@@ -13,33 +13,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PageParser {
     private Map<String, ParsePageDto> pages = new HashMap<>();
-    private final HttpConnectionService httpConnectionService;
+    private final HttpService httpService;
 
     public Map<String, ParsePageDto> parsePageByUrl(int depth, Set<String> links) {
         if (depth == 0) { return pages; }
 
-        Set<Elements> elements = links.stream()
-                .map(element -> {
-                    Elements urls = null;
+        Set<String> nestedLinks = links.stream()
+                .map(link -> {
+                    Elements urls = new Elements();
                     try {
-                        Document document = httpConnectionService.getConnection(element);
-
-                        ParsePageDto parsePageDto = ParsePageDto.builder()
-                                .title(document.title())
-                                .body(document.body().text())
-                                .build();
-
-                        pages.put(element, parsePageDto);
-
+                        Document document = httpService.downloadDocument(link);
+                        pages.put(link, createParsePage(document));
                         urls = document.body().select("a[href]");
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        new Elements();
                     }
                     return urls;
                 })
-                .collect(Collectors.toSet());
-
-        Set<String> newLinks = elements.stream()
                 .filter(Objects::nonNull)
                 .flatMap(element -> element.stream()
                         .map(link -> link.attr("abs:href") + link.attr("rel"))
@@ -47,6 +37,13 @@ public class PageParser {
                         .filter(str -> !str.isEmpty()))
                 .collect(Collectors.toSet());
 
-        return parsePageByUrl(depth - 1, newLinks);
+        return parsePageByUrl(depth - 1, nestedLinks);
+    }
+
+    private ParsePageDto createParsePage(Document document) {
+        return ParsePageDto.builder()
+                .title(document.title())
+                .body(document.body().text())
+                .build();
     }
 }

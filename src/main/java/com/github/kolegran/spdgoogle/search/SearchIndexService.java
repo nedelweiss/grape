@@ -15,13 +15,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SearchIndexService {
+    private static final int FRAGMENT_SIZE = 10;
+    private static final int MAX_NUM_FRAGMENTS = 10;
+
     private final Directory memoryIndex;
 
     public PageDto searchIndex(String inField, String q, String sortType, int pageNum) {
@@ -37,7 +39,7 @@ public class SearchIndexService {
 
             QueryScorer scorer = new QueryScorer(query);
             Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(), scorer);
-            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 10));
+            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, FRAGMENT_SIZE));
 
             List<Document> documents = new ArrayList<>();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -45,7 +47,7 @@ public class SearchIndexService {
 
                 String body = document.get("body");
                 TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, "body", analyzer);
-                fragments = highlighter.getBestFragments(stream, body, 10);
+                fragments = highlighter.getBestFragments(stream, body, MAX_NUM_FRAGMENTS);
 
                 documents.add(document);
             }

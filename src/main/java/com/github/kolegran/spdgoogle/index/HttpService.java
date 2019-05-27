@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class HttpConnectionService {
-    public Document getConnection(String element) throws IOException {
-        return Jsoup.connect(element).get();
+public class HttpService {
+    public Document downloadDocument(String url) throws IOException {
+        return Jsoup.connect(url).get();
     }
 }
