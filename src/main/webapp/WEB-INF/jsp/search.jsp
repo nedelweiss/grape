@@ -8,7 +8,7 @@
 <div class="outer">
     <div class="inner">
         <form action="search" method="get">
-            <input type="text" name="q" placeholder="Search...">
+            <input type="text" title="Search" name="q" placeholder="Search...">
             <input type="hidden" name="pageNum" value="1">
             <button class="button">Search</button>
         </form>

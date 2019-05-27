@@ -8,8 +8,8 @@
     <div class="outer">
         <div class="inner">
             <form action="" method="post">
-                <input type="text" name="validUrl" placeholder="Input an URL">
-                <input type="number" name="indexDepth" value="2">
+                <input type="text" title="URL" name="validUrl" placeholder="Input an URL">
+                <input type="number" title="Index depth" name="indexDepth" value="2">
                 <button class="button">Index</button>
             </form>
         </div>
