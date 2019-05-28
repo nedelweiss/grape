@@ -15,6 +15,11 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class PageParser {
+    private static final String CSS_QUERY = "a[href]";
+    private static final String ATTR_KEY_ABS_REFERENCE = "abs:href";
+    private static final String ATTR_KEY_REL_REFERENCE = "rel";
+    private static final String NUMBER_SIGN = "#";
+
     private Map<String, ParsePageDto> pages = new HashMap<>();
     private final HttpService httpService;
 
@@ -27,7 +32,7 @@ public class PageParser {
                     try {
                         Document document = httpService.downloadDocument(link);
                         pages.put(link, createParsePage(document));
-                        urls = document.body().select("a[href]");
+                        urls = document.body().select(CSS_QUERY);
                     } catch (IOException e) {
                         new Elements();
                     }
@@ -35,8 +40,8 @@ public class PageParser {
                 })
                 .filter(Objects::nonNull)
                 .flatMap(element -> element.stream()
-                        .map(link -> link.attr("abs:href") + link.attr("rel"))
-                        .map(link -> link.contains("#") ? link.substring(0, link.indexOf("#")) : link)
+                        .map(link -> link.attr(ATTR_KEY_ABS_REFERENCE) + link.attr(ATTR_KEY_REL_REFERENCE))
+                        .map(link -> link.contains(NUMBER_SIGN) ? link.substring(0, link.indexOf(NUMBER_SIGN)) : link)
                         .filter(str -> !str.isEmpty()))
                 .collect(Collectors.toSet());
 

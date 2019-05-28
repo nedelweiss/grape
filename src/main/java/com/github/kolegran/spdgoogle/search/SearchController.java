@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Map;
 
+import static com.github.kolegran.spdgoogle.IndexSearchConstants.BODY;
+
 @Controller
 @RequiredArgsConstructor
 @Validated
@@ -30,7 +32,7 @@ public class SearchController {
                          @RequestParam(defaultValue = "relevant") String sortType,
                          @RequestParam(defaultValue = "1") int pageNum, Map<String, Object> model) {
 
-        PageDto page = searchIndexService.searchIndex("body", q, sortType, pageNum);
+        PageDto page = searchIndexService.searchIndex(BODY, q, sortType, pageNum);
         model.put("page", page);
         model.put("currentPage", pageNum);
 

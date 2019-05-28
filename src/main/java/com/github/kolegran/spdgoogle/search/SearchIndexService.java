@@ -29,11 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.kolegran.spdgoogle.IndexSearchConstants.BODY;
+import static com.github.kolegran.spdgoogle.IndexSearchConstants.TITLE;
+import static com.github.kolegran.spdgoogle.IndexSearchConstants.URL;
+import static com.github.kolegran.spdgoogle.IndexSearchConstants.SORT_BY_FIELD;
+
 @Service
 @RequiredArgsConstructor
 public class SearchIndexService {
     private static final int FRAGMENT_SIZE = 10;
     private static final int MAX_NUM_FRAGMENTS = 10;
+    private static final int CHUNK = 10;
+    private static final int LAST_ELEMENTS = 10;
+    private static final String SORT_TYPE = "alphabet";
 
     private final Directory memoryIndex;
 
@@ -46,7 +54,7 @@ public class SearchIndexService {
             IndexSearcher searcher = new IndexSearcher(indexReader);
 
             Query query = new QueryParser(inField, analyzer).parse(q);
-            TopDocs topDocs = searcher.search(query, pageNum*10, createSort(sortType));
+            TopDocs topDocs = searcher.search(query, pageNum * CHUNK, createSort(sortType));
 
             QueryScorer scorer = new QueryScorer(query);
             Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(), scorer);
@@ -56,8 +64,8 @@ public class SearchIndexService {
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 Document document = searcher.doc(scoreDoc.doc);
 
-                String body = document.get("body");
-                TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, "body", analyzer);
+                String body = document.get(BODY);
+                TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, BODY, analyzer);
                 fragments = highlighter.getBestFragments(stream, body, MAX_NUM_FRAGMENTS);
 
                 documents.add(document);
@@ -66,7 +74,7 @@ public class SearchIndexService {
             List<PageItemDto> pageItems = createPageItem(documents, fragments);
             return PageDto.builder()
                     .numberOfDocs(getAllHitsNumber(query, searcher))
-                    .pageItems(pageItems.subList(Math.max(pageItems.size() - 10, 0), pageItems.size()))
+                    .pageItems(pageItems.subList(Math.max(pageItems.size() - LAST_ELEMENTS, 0), pageItems.size()))
                     .build();
 
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
@@ -75,15 +83,17 @@ public class SearchIndexService {
     }
 
     private Sort createSort(String sortType) {
-        return sortType.equals("alphabet") ? new Sort(new SortField("sortByTitle", SortField.Type.STRING_VAL, false)) : new Sort();
+        return sortType.equals(SORT_TYPE)
+                ? new Sort(new SortField(SORT_BY_FIELD, SortField.Type.STRING_VAL, false))
+                : new Sort();
     }
 
     private List<PageItemDto> createPageItem(List<Document> documents, String[] fragments) {
         return documents.stream()
                 .map(document -> PageItemDto.builder()
-                        .url(document.get("url"))
-                        .title(document.get("title"))
-                        .body(document.get("body"))
+                        .url(document.get(URL))
+                        .title(document.get(TITLE))
+                        .body(document.get(BODY))
                         .fragments(String.join("", fragments))
                         .build())
                 .collect(Collectors.toList());
