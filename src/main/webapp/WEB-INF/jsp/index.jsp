@@ -5,14 +5,14 @@
     <link href="css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="outer">
-        <div class="inner">
-            <form action="" method="post">
-                <input type="text" title="URL" name="validUrl" placeholder="Input an URL">
-                <input type="number" title="Index depth" name="indexDepth" value="2">
-                <button class="button">Index</button>
-            </form>
-        </div>
+<div class="outer">
+    <div class="inner">
+        <form action="" method="post">
+            <input type="text" title="URL" name="validUrl" placeholder="Input an URL">
+            <input type="number" title="Index depth" name="indexDepth" value="2">
+            <button class="button">Index</button>
+        </form>
     </div>
+</div>
 </body>
 </html>
