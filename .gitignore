@@ -9,3 +9,5 @@ HELP.md
 *.iml
 *.ipr
 /out/
+
+/data/*
