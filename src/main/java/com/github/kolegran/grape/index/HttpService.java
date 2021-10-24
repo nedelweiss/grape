@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle.index;
+package com.github.kolegran.grape.index;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

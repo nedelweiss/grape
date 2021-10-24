@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle.search;
+package com.github.kolegran.grape.search;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.lucene.analysis.TokenStream;
@@ -29,10 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.BODY;
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.TITLE;
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.URL;
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.SORT_BY_FIELD;
+import static com.github.kolegran.grape.IndexSearchConstants.BODY;
+import static com.github.kolegran.grape.IndexSearchConstants.SORT_BY_FIELD;
+import static com.github.kolegran.grape.IndexSearchConstants.TITLE;
+import static com.github.kolegran.grape.IndexSearchConstants.URL;
 
 @Service
 @RequiredArgsConstructor

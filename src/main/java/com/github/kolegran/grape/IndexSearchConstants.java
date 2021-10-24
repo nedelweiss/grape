@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle;
+package com.github.kolegran.grape;
 
 import org.springframework.stereotype.Component;
 

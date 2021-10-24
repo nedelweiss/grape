@@ -1,5 +1,4 @@
-docker pull kolegran/spd-google
+docker pull kolegran/grape
+docker rm -f grape
 
-docker rm -f spd-google
-
-docker run -d -p 8082:8080 --name spd-google kolegran/spd-google:latest
+docker run -d -p 8082:8080 --name grape-search kolegran/grape:latest

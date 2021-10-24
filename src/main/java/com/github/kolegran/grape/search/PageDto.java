@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle.search;
+package com.github.kolegran.grape.search;
 
 import lombok.Builder;
 import lombok.Getter;

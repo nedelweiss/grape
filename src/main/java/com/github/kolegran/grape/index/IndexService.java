@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle.index;
+package com.github.kolegran.grape.index;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.BODY;
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.TITLE;
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.URL;
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.SORT_BY_FIELD;
+import static com.github.kolegran.grape.IndexSearchConstants.BODY;
+import static com.github.kolegran.grape.IndexSearchConstants.SORT_BY_FIELD;
+import static com.github.kolegran.grape.IndexSearchConstants.TITLE;
+import static com.github.kolegran.grape.IndexSearchConstants.URL;
 
 @Service
 @RequiredArgsConstructor

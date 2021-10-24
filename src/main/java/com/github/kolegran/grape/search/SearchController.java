@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle.search;
+package com.github.kolegran.grape.search;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Map;
 
-import static com.github.kolegran.spdgoogle.IndexSearchConstants.BODY;
+import static com.github.kolegran.grape.IndexSearchConstants.BODY;
 
 @Controller
 @RequiredArgsConstructor

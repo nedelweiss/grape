@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle;
+package com.github.kolegran.grape;
 
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 @SpringBootApplication
-public class SpdGoogleApplication {
+public class GrapeApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(SpdGoogleApplication.class, args);
+		SpringApplication.run(GrapeApplication.class, args);
 	}
 
 	@Bean

@@ -1,4 +1,4 @@
-package com.github.kolegran.spdgoogle.index;
+package com.github.kolegran.grape.index;
 
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
