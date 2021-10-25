@@ -44,7 +44,6 @@ public class SearchIndexService {
     private static final int MAX_FRAGMENTS_NUMBER = 10;
     private static final int CHUNK = 10;
     private static final int LAST_ELEMENTS = 10;
-    private static final String SORT_TYPE = "alphabet";
 
     private final Directory memoryIndex;
 
@@ -53,19 +52,21 @@ public class SearchIndexService {
     }
 
     public PageDto search(String inField, String searchQuery, String sortType, int pages) {
-        try {
-            final StandardAnalyzer analyzer = new StandardAnalyzer();
+        try (
             final IndexReader indexReader = DirectoryReader.open(memoryIndex);
+            final StandardAnalyzer analyzer = new StandardAnalyzer()
+        ) {
             final IndexSearcher searcher = new IndexSearcher(indexReader);
             final Query query = new QueryParser(inField, analyzer).parse(searchQuery);
+
             final Highlighter highlighter = createHighlighter(query);
-            final TopDocs topDocs = searcher.search(query, pages * CHUNK, selectSortOrder(sortType));
+            final TopDocs topDocuments = searcher.search(query, pages * CHUNK, selectSortOrder(sortType));
+
             String[] fragments = new String[0];
             final List<Document> documents = new ArrayList<>();
-            for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+            for (ScoreDoc scoreDoc : topDocuments.scoreDocs) {
                 final Document document = searcher.doc(scoreDoc.doc);
-                // TODO: replace deprecated method
-                final TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, BODY, analyzer);
+                final TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, BODY, analyzer); // TODO: replace deprecated method
                 fragments = highlighter.getBestFragments(stream, document.get(BODY), MAX_FRAGMENTS_NUMBER);
                 documents.add(document);
             }
@@ -93,7 +94,7 @@ public class SearchIndexService {
     }
 
     private Sort selectSortOrder(String sortType) {
-        return sortType.equals(SORT_TYPE)
+        return sortType.equals(SortType.ALPHABET.getType())
             ? new Sort(new SortField(SORT_BY_TITLE, SortField.Type.STRING_VAL, false))
             : new Sort();
     }
