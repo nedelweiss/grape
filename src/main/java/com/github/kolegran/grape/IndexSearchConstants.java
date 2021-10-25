@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class IndexSearchConstants {
+
     private IndexSearchConstants() {
     }
 

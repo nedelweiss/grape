@@ -1,6 +1,5 @@
 package com.github.kolegran.grape.index;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -21,9 +20,13 @@ import static com.github.kolegran.grape.IndexSearchConstants.TITLE;
 import static com.github.kolegran.grape.IndexSearchConstants.URL;
 
 @Service
-@RequiredArgsConstructor
 public class IndexService {
+
     private final Directory memoryIndex;
+
+    public IndexService(Directory memoryIndex) {
+        this.memoryIndex = memoryIndex;
+    }
 
     public void indexDocument(Map<String, ParsePageDto> pages) {
         StandardAnalyzer analyzer = new StandardAnalyzer();

@@ -1,6 +1,5 @@
 package com.github.kolegran.grape.search;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -35,8 +34,8 @@ import static com.github.kolegran.grape.IndexSearchConstants.TITLE;
 import static com.github.kolegran.grape.IndexSearchConstants.URL;
 
 @Service
-@RequiredArgsConstructor
 public class SearchIndexService {
+
     private static final int FRAGMENT_SIZE = 10;
     private static final int MAX_NUM_FRAGMENTS = 10;
     private static final int CHUNK = 10;
@@ -44,6 +43,10 @@ public class SearchIndexService {
     private static final String SORT_TYPE = "alphabet";
 
     private final Directory memoryIndex;
+
+    public SearchIndexService(Directory memoryIndex) {
+        this.memoryIndex = memoryIndex;
+    }
 
     public PageDto searchIndex(String inField, String q, String sortType, int pageNum) {
         String[] fragments = new String[0];
@@ -72,10 +75,10 @@ public class SearchIndexService {
             }
 
             List<PageItemDto> pageItems = createPageItem(documents, fragments);
-            return PageDto.builder()
-                    .numberOfDocs(getAllHitsNumber(query, searcher))
-                    .pageItems(pageItems.subList(Math.max(pageItems.size() - LAST_ELEMENTS, 0), pageItems.size()))
-                    .build();
+            return new PageDto(
+                getAllHitsNumber(query, searcher),
+                pageItems.subList(Math.max(pageItems.size() - LAST_ELEMENTS, 0), pageItems.size())
+            );
 
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             throw new IllegalStateException(e);
@@ -84,19 +87,14 @@ public class SearchIndexService {
 
     private Sort createSort(String sortType) {
         return sortType.equals(SORT_TYPE)
-                ? new Sort(new SortField(SORT_BY_FIELD, SortField.Type.STRING_VAL, false))
-                : new Sort();
+            ? new Sort(new SortField(SORT_BY_FIELD, SortField.Type.STRING_VAL, false))
+            : new Sort();
     }
 
     private List<PageItemDto> createPageItem(List<Document> documents, String[] fragments) {
         return documents.stream()
-                .map(document -> PageItemDto.builder()
-                        .url(document.get(URL))
-                        .title(document.get(TITLE))
-                        .body(document.get(BODY))
-                        .fragments(String.join("", fragments))
-                        .build())
-                .collect(Collectors.toList());
+            .map(document -> new PageItemDto(document.get(URL), document.get(TITLE), document.get(BODY), String.join("", fragments)))
+            .collect(Collectors.toList());
     }
 
     private int getAllHitsNumber(Query query, IndexSearcher searcher) throws IOException {
