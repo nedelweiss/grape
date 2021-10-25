@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
 import java.util.Set;
 
 @Controller
@@ -36,7 +37,7 @@ public class IndexController {
         @RequestParam @NotBlank @NotNull @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String url,
         @RequestParam(defaultValue = "2") @Min(1) @Max(20) int indexDepth
     ) {
-        indexService.indexDocument(websiteParser.parsePageByUrl(indexDepth, Set.of(url)));
+        indexService.indexDocument(websiteParser.parseByUrl(indexDepth, Set.of(url), new HashMap<>()));
         return "indexed";
     }
 }

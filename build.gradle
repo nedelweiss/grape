@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'com.google.guava:guava:31.0.1-jre'
 	implementation 'javax.servlet:jstl'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'org.jsoup:jsoup:1.12.1'
