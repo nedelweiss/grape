@@ -21,6 +21,8 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.search.highlight.TokenSources;
 import org.apache.lucene.store.Directory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,8 +38,10 @@ import static com.github.kolegran.grape.IndexSearchConstants.URL;
 @Service
 public class SearchIndexService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchIndexService.class);
+
     private static final int FRAGMENT_SIZE = 10;
-    private static final int MAX_NUM_FRAGMENTS = 10;
+    private static final int MAX_FRAGMENTS_NUMBER = 10;
     private static final int CHUNK = 10;
     private static final int LAST_ELEMENTS = 10;
     private static final String SORT_TYPE = "alphabet";
@@ -54,23 +58,30 @@ public class SearchIndexService {
             final IndexReader indexReader = DirectoryReader.open(memoryIndex);
             final IndexSearcher searcher = new IndexSearcher(indexReader);
             final Query query = new QueryParser(inField, analyzer).parse(searchQuery);
-
             final Highlighter highlighter = createHighlighter(query);
             final TopDocs topDocs = searcher.search(query, pages * CHUNK, selectSortOrder(sortType));
             String[] fragments = new String[0];
             final List<Document> documents = new ArrayList<>();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 final Document document = searcher.doc(scoreDoc.doc);
+                // TODO: replace deprecated method
                 final TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, BODY, analyzer);
-                fragments = highlighter.getBestFragments(stream, document.get(BODY), MAX_NUM_FRAGMENTS);
+                fragments = highlighter.getBestFragments(stream, document.get(BODY), MAX_FRAGMENTS_NUMBER);
                 documents.add(document);
             }
 
             final List<PageItemDto> pageItems = createPageItem(documents, fragments);
             return new PageDto(getAllHitsNumber(query, searcher), pageItems.subList(Math.max(pageItems.size() - LAST_ELEMENTS, 0), pageItems.size()));
-
-        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
-            throw new IllegalStateException(e);
+        } catch (IOException exception) {
+            LOGGER.error("IOException during working with index. SearchQuery: {}. SortType: {}.", searchQuery, sortType);
+            throw new HandleSearchQueryException("Cannot handle Search Query: " + searchQuery, exception);
+        } catch (ParseException exception) {
+            LOGGER.error("Cannot parse the next search query: {}", searchQuery);
+            throw new CannotParseSearchQueryException("Cannot parse Search Query: " + searchQuery, exception);
+        } catch (InvalidTokenOffsetsException exception) {
+            final int textLength = searchQuery.length();
+            LOGGER.error("Token's endOffset exceeds the provided text's length: {}", textLength);
+            throw new CannotHighlightTextException("Token's endOffset is long. The length of Search Query is: " + textLength, exception);
         }
     }
 
@@ -93,13 +104,34 @@ public class SearchIndexService {
             .collect(Collectors.toList());
     }
 
+    private PageItemDto createPageItemDto(String[] fragments, Document document) {
+        return new PageItemDto(document.get(URL), document.get(TITLE), document.get(BODY), String.join("", fragments));
+    }
+
     private int getAllHitsNumber(Query query, IndexSearcher searcher) throws IOException {
         final TotalHitCountCollector collector = new TotalHitCountCollector();
         searcher.search(query, collector);
         return collector.getTotalHits();
     }
 
-    private PageItemDto createPageItemDto(String[] fragments, Document document) {
-        return new PageItemDto(document.get(URL), document.get(TITLE), document.get(BODY), String.join("", fragments));
+    private static final class HandleSearchQueryException extends RuntimeException {
+
+        public HandleSearchQueryException(String message, Exception exception) {
+            super(message, exception);
+        }
+    }
+
+    private static final class CannotParseSearchQueryException extends RuntimeException {
+
+        public CannotParseSearchQueryException(String message, Exception exception) {
+            super(message, exception);
+        }
+    }
+
+    private static final class CannotHighlightTextException extends RuntimeException {
+
+        public CannotHighlightTextException(String message, Exception exception) {
+            super(message, exception);
+        }
     }
 }
