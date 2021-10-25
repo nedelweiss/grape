@@ -4,7 +4,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class WebsiteParser {
                     Document document = documentDownloader.downloadDocument(link);
                     pages.put(link, createParsePage(document));
                     urls = document.body().select(CSS_QUERY);
-                } catch (IOException | NullPointerException e) {
+                } catch (NullPointerException e) {
                     return new Elements();
                 }
                 return urls;

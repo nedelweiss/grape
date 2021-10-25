@@ -22,38 +22,34 @@ import static com.github.kolegran.grape.IndexSearchConstants.URL;
 @Service
 public class IndexService {
 
+    private final IndexWriterConfig indexWriterConfig;
     private final Directory memoryIndex;
 
     public IndexService(Directory memoryIndex) {
+        this.indexWriterConfig = new IndexWriterConfig(new StandardAnalyzer());
         this.memoryIndex = memoryIndex;
     }
 
     public void indexDocument(Map<String, ParsePageDto> pages) {
-        StandardAnalyzer analyzer = new StandardAnalyzer();
-        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-        IndexWriter writer = null;
-        try {
-            writer = new IndexWriter(memoryIndex, indexWriterConfig);
-
+        try (final IndexWriter writer = new IndexWriter(memoryIndex, indexWriterConfig)) {
             for (Map.Entry<String, ParsePageDto> entry : pages.entrySet()) {
-                Document document = new Document();
-
+                final Document document = new Document();
                 document.add(new TextField(URL, entry.getKey(), Field.Store.YES));
                 document.add(new TextField(BODY, entry.getValue().getBody(), Field.Store.YES));
                 document.add(new TextField(TITLE, entry.getValue().getTitle(), Field.Store.YES));
                 document.add(new SortedDocValuesField(SORT_BY_TITLE, new BytesRef(entry.getValue().getTitle())));
-
                 writer.addDocument(document);
             }
             pages.clear();
-        } catch (IOException ioe) {
-            throw new IllegalStateException(ioe);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
+        } catch (IOException exception) {
+            throw new CannotWriteDocumentException("Cannot write document to Index", exception);
+        }
+    }
+
+    private static final class CannotWriteDocumentException extends RuntimeException {
+
+        private CannotWriteDocumentException(String message, Exception exception) {
+            super(message, exception);
         }
     }
 }

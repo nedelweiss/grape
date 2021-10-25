@@ -30,12 +30,13 @@ public class IndexController {
         return "index";
     }
 
+    // TODO: change max length of URL
     @PostMapping("/index")
     public String createIndex(
-        @RequestParam @NotBlank @NotNull @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String validUrl,
+        @RequestParam @NotBlank @NotNull @Size(min = 5, max = 200, message = "Url must contain from 5 to 200 symbols") String url,
         @RequestParam(defaultValue = "2") @Min(1) @Max(20) int indexDepth
     ) {
-        indexService.indexDocument(websiteParser.parsePageByUrl(indexDepth, Set.of(validUrl)));
+        indexService.indexDocument(websiteParser.parsePageByUrl(indexDepth, Set.of(url)));
         return "indexed";
     }
 }

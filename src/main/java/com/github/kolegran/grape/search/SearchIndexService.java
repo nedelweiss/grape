@@ -117,21 +117,21 @@ public class SearchIndexService {
 
     private static final class HandleSearchQueryException extends RuntimeException {
 
-        public HandleSearchQueryException(String message, Exception exception) {
+        private HandleSearchQueryException(String message, Exception exception) {
             super(message, exception);
         }
     }
 
     private static final class CannotParseSearchQueryException extends RuntimeException {
 
-        public CannotParseSearchQueryException(String message, Exception exception) {
+        private CannotParseSearchQueryException(String message, Exception exception) {
             super(message, exception);
         }
     }
 
     private static final class CannotHighlightTextException extends RuntimeException {
 
-        public CannotHighlightTextException(String message, Exception exception) {
+        private CannotHighlightTextException(String message, Exception exception) {
             super(message, exception);
         }
     }
