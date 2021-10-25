@@ -9,8 +9,8 @@
     <div class="inner">
         <img src="icons/grape-2-free.svg" height="100" width="100">
         <form action="search" method="get">
-            <input type="text" title="Search" name="q" placeholder="Search...">
-            <input type="hidden" name="pageNum" value="1">
+            <input type="text" title="Search" name="query" placeholder="Search...">
+            <input type="hidden" name="pages" value="1">
             <button class="button">Search</button>
         </form>
     </div>

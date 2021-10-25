@@ -6,10 +6,11 @@ import org.springframework.stereotype.Component;
 public final class IndexSearchConstants {
 
     private IndexSearchConstants() {
+        // hide public constructor
     }
 
-    public static String BODY = "body";
-    public static String TITLE = "title";
-    public static String URL = "url";
-    public static String SORT_BY_FIELD = "sortByTitle";
+    public final static String BODY = "body";
+    public final static String TITLE = "title";
+    public final static String URL = "url";
+    public final static String SORT_BY_TITLE = "sortByTitle";
 }

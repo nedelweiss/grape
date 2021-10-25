@@ -29,12 +29,13 @@ public class SearchController {
 
     @GetMapping("/search")
     public String search(
-        @RequestParam @NotBlank @NotNull @Size(min = 1, max = 200) String q,
+        @RequestParam @NotBlank @NotNull @Size(min = 1, max = 200) String query,
         @RequestParam(defaultValue = "relevant") String sortType,
-        @RequestParam(defaultValue = "1") int pageNum, Map<String, Object> model
+        @RequestParam(defaultValue = "1") int pages,
+        Map<String, Object> model
     ) {
-        model.put("page", searchIndexService.searchIndex(BODY, q, sortType, pageNum));
-        model.put("currentPage", pageNum);
+        model.put("page", searchIndexService.search(BODY, query, sortType, pages));
+        model.put("currentPage", pages);
         return "searchedPages";
     }
 }

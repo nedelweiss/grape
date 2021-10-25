@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.kolegran.grape.IndexSearchConstants.BODY;
-import static com.github.kolegran.grape.IndexSearchConstants.SORT_BY_FIELD;
+import static com.github.kolegran.grape.IndexSearchConstants.SORT_BY_TITLE;
 import static com.github.kolegran.grape.IndexSearchConstants.TITLE;
 import static com.github.kolegran.grape.IndexSearchConstants.URL;
 
@@ -48,58 +48,58 @@ public class SearchIndexService {
         this.memoryIndex = memoryIndex;
     }
 
-    public PageDto searchIndex(String inField, String q, String sortType, int pageNum) {
-        String[] fragments = new String[0];
-
+    public PageDto search(String inField, String searchQuery, String sortType, int pages) {
         try {
-            StandardAnalyzer analyzer = new StandardAnalyzer();
-            IndexReader indexReader = DirectoryReader.open(memoryIndex);
-            IndexSearcher searcher = new IndexSearcher(indexReader);
+            final StandardAnalyzer analyzer = new StandardAnalyzer();
+            final IndexReader indexReader = DirectoryReader.open(memoryIndex);
+            final IndexSearcher searcher = new IndexSearcher(indexReader);
+            final Query query = new QueryParser(inField, analyzer).parse(searchQuery);
 
-            Query query = new QueryParser(inField, analyzer).parse(q);
-            TopDocs topDocs = searcher.search(query, pageNum * CHUNK, createSort(sortType));
-
-            QueryScorer scorer = new QueryScorer(query);
-            Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(), scorer);
-            highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, FRAGMENT_SIZE));
-
-            List<Document> documents = new ArrayList<>();
+            final Highlighter highlighter = createHighlighter(query);
+            final TopDocs topDocs = searcher.search(query, pages * CHUNK, selectSortOrder(sortType));
+            String[] fragments = new String[0];
+            final List<Document> documents = new ArrayList<>();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-                Document document = searcher.doc(scoreDoc.doc);
-
-                String body = document.get(BODY);
-                TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, BODY, analyzer);
-                fragments = highlighter.getBestFragments(stream, body, MAX_NUM_FRAGMENTS);
-
+                final Document document = searcher.doc(scoreDoc.doc);
+                final TokenStream stream = TokenSources.getAnyTokenStream(indexReader, scoreDoc.doc, BODY, analyzer);
+                fragments = highlighter.getBestFragments(stream, document.get(BODY), MAX_NUM_FRAGMENTS);
                 documents.add(document);
             }
 
-            List<PageItemDto> pageItems = createPageItem(documents, fragments);
-            return new PageDto(
-                getAllHitsNumber(query, searcher),
-                pageItems.subList(Math.max(pageItems.size() - LAST_ELEMENTS, 0), pageItems.size())
-            );
+            final List<PageItemDto> pageItems = createPageItem(documents, fragments);
+            return new PageDto(getAllHitsNumber(query, searcher), pageItems.subList(Math.max(pageItems.size() - LAST_ELEMENTS, 0), pageItems.size()));
 
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private Sort createSort(String sortType) {
+    private Highlighter createHighlighter(Query query) {
+        final QueryScorer scorer = new QueryScorer(query);
+        final Highlighter highlighter = new Highlighter(new SimpleHTMLFormatter(), scorer);
+        highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, FRAGMENT_SIZE));
+        return highlighter;
+    }
+
+    private Sort selectSortOrder(String sortType) {
         return sortType.equals(SORT_TYPE)
-            ? new Sort(new SortField(SORT_BY_FIELD, SortField.Type.STRING_VAL, false))
+            ? new Sort(new SortField(SORT_BY_TITLE, SortField.Type.STRING_VAL, false))
             : new Sort();
     }
 
     private List<PageItemDto> createPageItem(List<Document> documents, String[] fragments) {
         return documents.stream()
-            .map(document -> new PageItemDto(document.get(URL), document.get(TITLE), document.get(BODY), String.join("", fragments)))
+            .map(document -> createPageItemDto(fragments, document))
             .collect(Collectors.toList());
     }
 
     private int getAllHitsNumber(Query query, IndexSearcher searcher) throws IOException {
-        TotalHitCountCollector collector = new TotalHitCountCollector();
+        final TotalHitCountCollector collector = new TotalHitCountCollector();
         searcher.search(query, collector);
         return collector.getTotalHits();
+    }
+
+    private PageItemDto createPageItemDto(String[] fragments, Document document) {
+        return new PageItemDto(document.get(URL), document.get(TITLE), document.get(BODY), String.join("", fragments));
     }
 }

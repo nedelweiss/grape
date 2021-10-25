@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static com.github.kolegran.grape.IndexSearchConstants.BODY;
-import static com.github.kolegran.grape.IndexSearchConstants.SORT_BY_FIELD;
+import static com.github.kolegran.grape.IndexSearchConstants.SORT_BY_TITLE;
 import static com.github.kolegran.grape.IndexSearchConstants.TITLE;
 import static com.github.kolegran.grape.IndexSearchConstants.URL;
 
@@ -41,7 +41,7 @@ public class IndexService {
                 document.add(new TextField(URL, entry.getKey(), Field.Store.YES));
                 document.add(new TextField(BODY, entry.getValue().getBody(), Field.Store.YES));
                 document.add(new TextField(TITLE, entry.getValue().getTitle(), Field.Store.YES));
-                document.add(new SortedDocValuesField(SORT_BY_FIELD, new BytesRef(entry.getValue().getTitle())));
+                document.add(new SortedDocValuesField(SORT_BY_TITLE, new BytesRef(entry.getValue().getTitle())));
 
                 writer.addDocument(document);
             }
