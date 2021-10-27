@@ -30,6 +30,8 @@ public class WebsiteParser {
     }
 
     // TODO: Fix duplicates at the result
+    // TODO: Play with different threads number
+    // TODO: Replace parallelStream() to executorService
     public Map<String, ParsePageDto> parseByUrl(int depth, Set<String> links, Map<String, ParsePageDto> pages) {
         if (depth < MIN_DEPTH) {
             return pages;
