@@ -25,6 +25,9 @@ public class IndexService {
     private final IndexWriterConfig indexWriterConfig;
     private final Directory memoryIndex;
 
+    // TODO: fix java.lang.IllegalStateException: do not share IndexWriterConfig instances across IndexWriters
+    // Only one valid IndexWriter can be opened for the same index library, if there are more than one, an exception will be thrown.
+    // For details see: https://github.com/kencery/Lucene_Compass_Elasticsearch/blob/master/Lucene_5.5/src/com/lyzj/kencery/unit/IndexWriterTest.java
     public IndexService(Directory memoryIndex) {
         this.indexWriterConfig = new IndexWriterConfig(new StandardAnalyzer());
         this.memoryIndex = memoryIndex;
